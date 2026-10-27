@@ -1,0 +1,27 @@
+# Pruebas de integración: PostgreSQL y Redis reales (en CI vienen como servicios de GitHub Actions).
+spring:
+  datasource:
+    url: ${TEST_DB_URL:jdbc:postgresql://localhost:5432/sopa_test}
+    username: ${TEST_DB_USER:sopa}
+    password: ${TEST_DB_PASSWORD:sopa}
+  data:
+    redis:
+      host: ${TEST_REDIS_HOST:localhost}
+      port: ${TEST_REDIS_PORT:6379}
+      database: 1
+
+app:
+  jwt:
+    secret: pruebas-pruebas-pruebas-pruebas-pruebas-1234567890
+  google:
+    client-ids: test-client-id
+  auth:
+    require-email-verification: true
+  rate-limit:
+    enabled: false
+  jobs:
+    enabled: false
+
+logging:
+  level:
+    com.sopaletras: INFO
