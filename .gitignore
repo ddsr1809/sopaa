@@ -1,0 +1,30 @@
+# Java / Maven
+target/
+*.class
+*.log
+hs_err_pid*
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.DS_Store
+
+# Android / iOS (para cuando se agreguen las apps al monorepo)
+.gradle/
+local.properties
+build/
+*.apk
+*.aab
+Pods/
+DerivedData/
+*.xcuserstate
+
+# Secretos
+.env
+*.env.local
+google-services.json
+GoogleService-Info.plist
