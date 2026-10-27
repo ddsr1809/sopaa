@@ -1,0 +1,9 @@
+# Perfil de desarrollo local (el que se usa por defecto).
+# Los correos no se envían: el enlace de verificación aparece en el log.
+logging:
+  level:
+    com.sopaletras: DEBUG
+
+app:
+  auth:
+    require-email-verification: ${APP_REQUIRE_EMAIL_VERIFICATION:false}

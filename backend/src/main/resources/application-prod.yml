@@ -1,0 +1,20 @@
+# Producción y testing desplegado. Requiere APP_JWT_SECRET, credenciales de base de datos,
+# Redis, SMTP y los client IDs de Google como variables de entorno.
+server:
+  forward-headers-strategy: ${FORWARD_HEADERS_STRATEGY:native}
+
+springdoc:
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+
+app:
+  mail:
+    enabled: ${APP_MAIL_ENABLED:true}
+  auth:
+    require-email-verification: true
+
+logging:
+  level:
+    root: INFO

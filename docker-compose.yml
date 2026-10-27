@@ -1,0 +1,48 @@
+# Entorno local completo: PostgreSQL, Redis y el backend.
+#   docker compose up -d postgres redis      → solo bases de datos (para correr el backend desde el IDE)
+#   docker compose up --build                → todo, con el backend en http://localhost:8080
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: sopa
+      POSTGRES_USER: sopa
+      POSTGRES_PASSWORD: sopa
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/scripts/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sopa -d sopa"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    profiles: ["app"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://postgres:5432/sopa
+      REDIS_HOST: redis
+      APP_JWT_SECRET: ${APP_JWT_SECRET:-cambia-esta-clave-local-de-al-menos-32-caracteres}
+      APP_GOOGLE_CLIENT_IDS: ${APP_GOOGLE_CLIENT_IDS:-}
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:

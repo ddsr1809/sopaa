@@ -1,0 +1,91 @@
+# Configuración base. Cada valor se puede sobrescribir con variables de entorno
+# (por ejemplo DB_URL, REDIS_HOST, APP_JWT_SECRET, APP_GOOGLE_CLIENT_IDS).
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: ${FORWARD_HEADERS_STRATEGY:none}
+  error:
+    include-message: never
+    include-stacktrace: never
+
+spring:
+  application:
+    name: sopa-backend
+  profiles:
+    default: dev
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/sopa}
+    username: ${DB_USER:sopa}
+    password: ${DB_PASSWORD:sopa}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USER:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+  jackson:
+    default-property-inclusion: always
+    serialization:
+      write-dates-as-timestamps: false
+  mvc:
+    problemdetails:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    mail:
+      enabled: false
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+  default-produces-media-type: application/json
+
+app:
+  web-base-url: ${APP_WEB_BASE_URL:http://localhost:3000}
+  timezone: ${APP_TIMEZONE:America/Mexico_City}
+  jwt:
+    secret: ${APP_JWT_SECRET:}
+    access-ttl: 15m
+    refresh-ttl: 30d
+  google:
+    # Separados por comas: client IDs de Android, iOS y web
+    client-ids: ${APP_GOOGLE_CLIENT_IDS:}
+  auth:
+    require-email-verification: ${APP_REQUIRE_EMAIL_VERIFICATION:true}
+  mail:
+    enabled: ${APP_MAIL_ENABLED:false}
+    from: ${APP_MAIL_FROM:Sopa de Letras <no-reply@sopadeletras.app>}
+  ranking:
+    min-city-players: 10
+    max-ranked-per-day: 50
+    offline-finish-window: 24h
+    location-change-cooldown: 30d
+    require-integrity: ${APP_REQUIRE_INTEGRITY:false}
+  cors:
+    allowed-origins: ${APP_CORS_ORIGINS:http://localhost:3000,http://localhost:5173}
+  rate-limit:
+    enabled: true
